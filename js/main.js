@@ -1,4 +1,33 @@
-'use strict';
+const GENERATED_OBJECTS_QTY = 10; // Число имуществ, которое нужно сгенерировать
+
+const PROPERTY_AVAILABLE_TYPES = [
+  'palace',
+  'flat',
+  'house',
+  'bungalow',
+  'hotel'
+];
+
+const PROPERTY_AVAILABLE_TIMES = [
+  '12:00',
+  '13:00',
+  '14:00'
+];
+
+const PROPERTY_AVAILABLE_FEATURES = [
+  'wifi',
+  'dishwasher',
+  'parking',
+  'washer',
+  'elevator'
+];
+
+const PROPERTY_IMAGES = [
+  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
+  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
+  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
+];
+
 
 /* Возвращает случайную целую величину из положительного диапазона [min, max]. \
 Если такого числа не существует (в  т.ч. в силу некорректности переданных аргументов), \
@@ -61,42 +90,11 @@ const getRandomSample = (iterable, sampleSize, canRepeat = false) => {
   }
 };
 
-const GENERATED_OBJECTS_QTY = 10; // Число имуществ, которое нужно сгенерировать
-
-const PROPERTY_AVAILABLE_TYPES = [
-  'palace',
-  'flat',
-  'house',
-  'bungalow',
-  'hotel'
-];
-
-const PROPERTY_AVAILABLE_TIMES = [
-  '12:00',
-  '13:00',
-  '14:00'
-];
-
-const PROPERTY_AVAILABLE_FEATURES = [
-  'wifi',
-  'dishwasher',
-  'parking',
-  'washer',
-  'elevator'
-];
-
-const PROPERTY_IMAGES = [
-  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
-  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
-  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
-];
-
-
 const generateProperty = (userID = 0) => {
   const lat = getRandomFloat(35.65, 35.70);
   const lng = getRandomFloat(139.70, 139.80);
   return {
-    author: {avatar: `img/avatars/user${String(userID).padStart(2, '0')}`},
+    author: {avatar: `img/avatars/user${String(userID).padStart(2, '0')}.png`},
     location: {lat: lat, lng: lng},
     offer: {
       title: `Название объявления ${getRandomInteger(1, 100000)}`,
