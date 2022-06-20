@@ -20,7 +20,8 @@ const PROPERTY_AVAILABLE_FEATURES = [
   'dishwasher',
   'parking',
   'washer',
-  'elevator'
+  'elevator',
+  'conditioner'
 ];
 
 const PROPERTY_IMAGES = [
@@ -31,7 +32,7 @@ const PROPERTY_IMAGES = [
 
 const generateProperty = (qty) => {
   const propertyList = [];
-  for (let i = 0; i <= Math.abs(qty); i++) {
+  for (let i = 0; i <= qty - 1; i++) {
     const lat = getRandomFloat(35.65, 35.70);
     const lng = getRandomFloat(139.70, 139.80);
     propertyList.push({
@@ -46,9 +47,9 @@ const generateProperty = (qty) => {
         guests: getRandomInteger(1, 100),
         checkin: getRandomItem(PROPERTY_AVAILABLE_TIMES),
         checkout: getRandomItem(PROPERTY_AVAILABLE_TIMES),
-        features: getRandomSample(PROPERTY_AVAILABLE_FEATURES, getRandomInteger(1, PROPERTY_AVAILABLE_FEATURES.length - 1)),
+        features: getRandomSample(PROPERTY_AVAILABLE_FEATURES, getRandomInteger(0, PROPERTY_AVAILABLE_FEATURES.length - 1)),
         description: `Сгенерированное описание объявления со случайным числом ${getRandomInteger(0, 1000000)}`,
-        photos: getRandomSample(PROPERTY_IMAGES, getRandomInteger(1, 5), true)
+        photos: getRandomSample(PROPERTY_IMAGES, getRandomInteger(0, 5), true)
       }
     });
   }
