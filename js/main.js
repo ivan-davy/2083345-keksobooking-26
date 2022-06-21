@@ -1,14 +1,7 @@
-import {generateProperty} from './generate-property.js';
+import {generatePropertyCard} from './generate-property-card.js';
 
 
-const GENERATED_OBJECTS_QTY = 10; // Число имуществ, которое нужно сгенерировать
-const properties = [];
+const GENERATED_OBJECTS_QTY = 1; // Число имуществ, которое нужно сгенерировать
 
-// Демонстрация сгенерированных имуществ
+generatePropertyCard(GENERATED_OBJECTS_QTY);
 
-console.log(generateProperty());
-
-for (let i = 0; i <= GENERATED_OBJECTS_QTY - 1; i++) {
-  properties.push(generateProperty(i + 1));
-}
-console.log(properties);
