@@ -1,0 +1,72 @@
+const adForm = document.querySelector('.ad-form');
+
+const TYPE_PRICE_MIN_RESTRICTIONS = {
+  'palace': 10000,
+  'flat': 1000,
+  'house': 5000,
+  'bungalow': 0,
+  'hotel': 3000
+};
+
+const ROOM_CAPACITY_RESTRICTIONS = {
+  '1': ['1'],
+  '2': ['1', '2'],
+  '3': ['1', '2', '3'],
+  '100': ['0']
+};
+
+const pristine = new Pristine(adForm, {
+  classTo: 'ad-form__element',
+  errorTextParent: 'ad-form__element',
+  errorClass: 'ad-form__element--invalid',
+  successClass: 'ad-form__element--valid',
+  errorTextClass: 'form__error'
+});
+
+
+const validateTitle = (value) => value.length >= 30 && value.length <= 100;
+const getTitleErrorMessage = () => 'Не короче 30 и не длиннее 100 символов';
+pristine.addValidator(
+  adForm.querySelector('#title'),
+  validateTitle,
+  getTitleErrorMessage
+);
+
+
+const validatePrice = (value) => {
+  const min = TYPE_PRICE_MIN_RESTRICTIONS[adForm.querySelector('#type option:checked').value];
+  return value >= min && value <= 100000;
+};
+const getPriceErrorMessage = () => {
+  const min = TYPE_PRICE_MIN_RESTRICTIONS[adForm.querySelector('#type option:checked').value];
+  return `От ${min} до 100000 ₽/ночь для выбранного типа недвижимости`;
+};
+pristine.addValidator(
+  adForm.querySelector('#price'),
+  validatePrice,
+  getPriceErrorMessage
+);
+adForm.querySelector('#type').addEventListener('change', () => {
+  pristine.validate();
+});
+
+
+const validateCapacity = (value) => {
+  const rooms = adForm.querySelector('#room_number option:checked').value;
+  return ROOM_CAPACITY_RESTRICTIONS[rooms].includes(value);
+};
+const getCapacityErrorMessage = () => 'Некорректное число гостей';
+pristine.addValidator(
+  adForm.querySelector('#capacity'),
+  validateCapacity,
+  getCapacityErrorMessage
+);
+adForm.querySelector('#room_number, #capacity').addEventListener('change', () => {
+  pristine.validate();
+});
+
+
+adForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  pristine.validate();
+});
