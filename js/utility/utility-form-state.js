@@ -1,4 +1,4 @@
-const toInactiveState = () => {
+const formsToInactiveState = () => {
   document.querySelector('.ad-form').classList.add('ad-form--disabled');
   document.querySelector('.ad-form')
     .querySelectorAll('fieldset')
@@ -13,7 +13,7 @@ const toInactiveState = () => {
     });
 };
 
-const toActiveState = () => {
+const formsToActiveState = () => {
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
   document.querySelector('.ad-form')
     .querySelectorAll('fieldset')
@@ -28,5 +28,5 @@ const toActiveState = () => {
     });
 };
 
-export {toInactiveState, toActiveState};
+export {formsToInactiveState, formsToActiveState};
 

@@ -15,7 +15,7 @@ const PRICE_SLIDER_CONFIGURATION = {
     max: 100000
   },
   start: TYPE_PRICE_MIN_RESTRICTIONS[adForm.querySelector('#type option:checked').value],
-  step: 500, //Как сделать так, чтобы слайдер имел шаг, допустим, 500, но не влиял на
+  step: 500,
   format: {
     to: (value) => value.toFixed(0),
     from: (value) => parseFloat(value),
@@ -62,18 +62,21 @@ pristine.addValidator(
   validatePrice,
   getPriceErrorMessage
 );
-adForm.querySelector('#type').addEventListener('change', () => {
-  priceInputElement.placeholder = TYPE_PRICE_MIN_RESTRICTIONS[adForm.querySelector('#type option:checked').value];
-  pristine.validate();
-});
-
 const priceSlider = adForm.querySelector('.ad-form__slider');
 noUiSlider.create(priceSlider, PRICE_SLIDER_CONFIGURATION);
 priceSlider.noUiSlider.on('slide', () => {
   priceInputElement.value = priceSlider.noUiSlider.get();
+  pristine.validate();
 });
 priceInputElement.addEventListener('change', () => {
   priceSlider.noUiSlider.set(priceInputElement.value);
+  pristine.validate();
+});
+adForm.querySelector('#type').addEventListener('change', () => {
+  priceInputElement.placeholder = TYPE_PRICE_MIN_RESTRICTIONS[adForm.querySelector('#type option:checked').value];
+  priceSlider.noUiSlider.updateOptions({
+    range: {min: parseFloat(priceInputElement.placeholder), max: 100000}});
+  pristine.validate();
 });
 
 // Число комнат и гостей
