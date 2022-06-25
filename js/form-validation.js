@@ -47,9 +47,9 @@ pristine.addValidator(
   getPriceErrorMessage
 );
 adForm.querySelector('#type').addEventListener('change', () => {
+  adForm.querySelector('#price').placeholder = TYPE_PRICE_MIN_RESTRICTIONS[adForm.querySelector('#type option:checked').value];
   pristine.validate();
 });
-
 
 const validateCapacity = (value) => {
   const rooms = adForm.querySelector('#room_number option:checked').value;
@@ -61,7 +61,22 @@ pristine.addValidator(
   validateCapacity,
   getCapacityErrorMessage
 );
-adForm.querySelector('#room_number, #capacity').addEventListener('change', () => {
+adForm.querySelector('#room_number').addEventListener('change', () => {
+  pristine.validate();
+});
+
+adForm.querySelector('#timein').addEventListener('change', () => {
+  const newTime = adForm.querySelector('#timein option:checked').value;
+  adForm.querySelectorAll('#timeout option').forEach((opt) => {
+    opt.selected = opt.value === newTime;
+  });
+  pristine.validate();
+});
+adForm.querySelector('#timeout').addEventListener('change', () => {
+  const newTime = adForm.querySelector('#timeout option:checked').value;
+  adForm.querySelectorAll('#timein option').forEach((opt) => {
+    opt.selected = opt.value === newTime;
+  });
   pristine.validate();
 });
 
@@ -70,3 +85,5 @@ adForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
   pristine.validate();
 });
+
+
