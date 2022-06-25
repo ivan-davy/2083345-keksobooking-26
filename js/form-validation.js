@@ -1,4 +1,5 @@
 const adForm = document.querySelector('.ad-form');
+//const selectedPropertyType = adForm.querySelector('#type option:checked').value;
 
 const TYPE_PRICE_MIN_RESTRICTIONS = {
   'palace': 10000,
@@ -6,6 +7,19 @@ const TYPE_PRICE_MIN_RESTRICTIONS = {
   'house': 5000,
   'bungalow': 0,
   'hotel': 3000
+};
+
+const PRICE_SLIDER_CONFIGURATION = {
+  range: {
+    min: TYPE_PRICE_MIN_RESTRICTIONS[adForm.querySelector('#type option:checked').value],
+    max: 100000
+  },
+  start: TYPE_PRICE_MIN_RESTRICTIONS[adForm.querySelector('#type option:checked').value],
+  step: 500, //Как сделать так, чтобы слайдер имел шаг, допустим, 500, но не влиял на
+  format: {
+    to: (value) => value.toFixed(0),
+    from: (value) => parseFloat(value),
+  },
 };
 
 const ROOM_CAPACITY_RESTRICTIONS = {
@@ -23,6 +37,7 @@ const pristine = new Pristine(adForm, {
   errorTextClass: 'form__error'
 });
 
+// Название
 
 const validateTitle = (value) => value.length >= 30 && value.length <= 100;
 const getTitleErrorMessage = () => 'Не короче 30 и не длиннее 100 символов';
@@ -32,7 +47,8 @@ pristine.addValidator(
   getTitleErrorMessage
 );
 
-
+// Цена
+const priceInputElement = adForm.querySelector('#price');
 const validatePrice = (value) => {
   const min = TYPE_PRICE_MIN_RESTRICTIONS[adForm.querySelector('#type option:checked').value];
   return value >= min && value <= 100000;
@@ -42,14 +58,25 @@ const getPriceErrorMessage = () => {
   return `От ${min} до 100000 ₽/ночь для выбранного типа недвижимости`;
 };
 pristine.addValidator(
-  adForm.querySelector('#price'),
+  priceInputElement,
   validatePrice,
   getPriceErrorMessage
 );
 adForm.querySelector('#type').addEventListener('change', () => {
-  adForm.querySelector('#price').placeholder = TYPE_PRICE_MIN_RESTRICTIONS[adForm.querySelector('#type option:checked').value];
+  priceInputElement.placeholder = TYPE_PRICE_MIN_RESTRICTIONS[adForm.querySelector('#type option:checked').value];
   pristine.validate();
 });
+
+const priceSlider = adForm.querySelector('.ad-form__slider');
+noUiSlider.create(priceSlider, PRICE_SLIDER_CONFIGURATION);
+priceSlider.noUiSlider.on('slide', () => {
+  priceInputElement.value = priceSlider.noUiSlider.get();
+});
+priceInputElement.addEventListener('change', () => {
+  priceSlider.noUiSlider.set(priceInputElement.value);
+});
+
+// Число комнат и гостей
 
 const validateCapacity = (value) => {
   const rooms = adForm.querySelector('#room_number option:checked').value;
@@ -64,6 +91,8 @@ pristine.addValidator(
 adForm.querySelector('#room_number').addEventListener('change', () => {
   pristine.validate();
 });
+
+// Чек-ин и чек-аут
 
 adForm.querySelector('#timein').addEventListener('change', () => {
   const newTime = adForm.querySelector('#timein option:checked').value;
@@ -80,6 +109,7 @@ adForm.querySelector('#timeout').addEventListener('change', () => {
   pristine.validate();
 });
 
+// Валидация при отправке
 
 adForm.addEventListener('submit', (evt) => {
   evt.preventDefault();

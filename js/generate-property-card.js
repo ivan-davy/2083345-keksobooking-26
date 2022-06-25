@@ -10,7 +10,6 @@ const PROPERTY_TYPE_VOCABULARY = {
 
 const generatePropertyCard = (qty = 1) => {
   const generatedProperties = generateProperty(qty);
-  const canvas = document.querySelector('#map-canvas');
   const propertyListFragment = document.createDocumentFragment();
   const cardTemplate = document.querySelector('#card');
   generatedProperties.forEach((property) => {
@@ -59,8 +58,6 @@ const generatePropertyCard = (qty = 1) => {
     }
     propertyListFragment.appendChild(propertyCard);
   });
-
-  canvas.appendChild(propertyListFragment);
 };
 
 export {generatePropertyCard};
