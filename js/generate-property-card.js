@@ -10,10 +10,11 @@ const PROPERTY_TYPE_VOCABULARY = {
 
 const generatePropertyCard = (qty = 1) => {
   const generatedProperties = generateProperty(qty);
-  const propertyListFragment = document.createDocumentFragment();
+  const propertyFragments = [];
   const cardTemplate = document.querySelector('#card');
   generatedProperties.forEach((property) => {
-    const propertyCard = cardTemplate.content.cloneNode(true);
+    const propertyCard = document.createElement('div');
+    propertyCard.appendChild(cardTemplate.content.cloneNode(true));
     propertyCard.querySelector('.popup__title').textContent = property.offer.title;
     propertyCard.querySelector('.popup__text--address').textContent = property.offer.address;
     propertyCard.querySelector('.popup__text--price').textContent = `${property.offer.price} ₽/ночь`;
@@ -56,8 +57,12 @@ const generatePropertyCard = (qty = 1) => {
         }
       });
     }
-    propertyListFragment.appendChild(propertyCard);
+    propertyFragments.push(propertyCard);
   });
+  return {
+    fragments: propertyFragments,
+    properties: generatedProperties,
+  };
 };
 
 export {generatePropertyCard};

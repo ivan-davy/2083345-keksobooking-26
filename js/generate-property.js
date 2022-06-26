@@ -41,7 +41,7 @@ const generateProperty = (qty) => {
       offer: {
         title: `Название объявления ${getRandomInteger(1, 100000)}`,
         address: `${lat}, ${lng}`,
-        price: getRandomInteger(1, 9999999999),
+        price: getRandomInteger(1, 100000),
         type: getRandomItem(PROPERTY_AVAILABLE_TYPES),
         rooms: getRandomInteger(1, 100),
         guests: getRandomInteger(1, 100),
