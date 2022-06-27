@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomFloat, getRandomItem, getRandomSample} from './utility/utility-random.js';
+import {getRandomInteger, getRandomFloat, getRandomItem, getRandomSample} from './random.js';
 
 
 const PROPERTY_AVAILABLE_TYPES = [

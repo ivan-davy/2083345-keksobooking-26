@@ -1,17 +1,22 @@
-import {formsToActiveState, formsToInactiveState} from './utility/utility-form-state.js';
-import {generatePropertyCard} from './generate-property-card.js';
+import {formsToActiveState, formsToInactiveState} from './utility/form-state.js';
+import {generatePropertyCards} from './generate-property-cards.js';
+import {getPropertyData} from './api.js';
+import {customAlert} from './utility/custom-alert.js';
 
 
-const GENERATED_OBJECTS_QTY = 10; // Число имуществ, которое нужно сгенерировать
+//const PROPERTIES_VISIBLE = 10; // Число имуществ, которое нужно показать
 const DEFAULT_COORDINATES = {lat: 35.675, lng: 139.75};
 const DEFAULT_SCALE = 12;
 const addressElement = document.querySelector('#address');
-const data = generatePropertyCard(GENERATED_OBJECTS_QTY);
 
 formsToInactiveState();
-const map = L.map('map-canvas')
-  .on('load', () => {formsToActiveState();})
-  .setView({lat: DEFAULT_COORDINATES.lat, lng: DEFAULT_COORDINATES.lng}, DEFAULT_SCALE);
+const map = L.map('map-canvas').setView({lat: DEFAULT_COORDINATES.lat, lng: DEFAULT_COORDINATES.lng}, DEFAULT_SCALE);
+
+map.on('load', () => {
+  formsToActiveState();
+  getPropertyData(customAlert);
+});
+
 
 L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -23,19 +28,17 @@ L.tileLayer(
 const mainMarkerGroup = L.layerGroup().addTo(map);
 const markerGroup = L.layerGroup().addTo(map);
 
-const createPin = (location, popupCardFragment) => {
-  const marker = L.marker(
-    location,
-    {
-      icon: L.icon({
-        iconUrl: '/img/pin.svg',
-        iconSize: [40, 40],
-        iconAnchor: [20, 40]
-      })
-    });
-  marker.bindPopup(popupCardFragment).addTo(markerGroup);
-  return marker;
-};
+const createPin = (location, popupCardFragment) => L.marker(
+  location,
+  {
+    icon: L.icon({
+      iconUrl: '/img/pin.svg',
+      iconSize: [40, 40],
+      iconAnchor: [20, 40]
+    })
+  })
+  .bindPopup(popupCardFragment).addTo(markerGroup);
+
 
 const createMainPin = (location) => L.marker(
   location,
@@ -48,6 +51,7 @@ const createMainPin = (location) => L.marker(
     })
   })
   .addTo(mainMarkerGroup);
+
 
 const mainPin = createMainPin(DEFAULT_COORDINATES);
 const pins = [];
@@ -62,7 +66,3 @@ mainPin.on('drag', (evt) => {
   const mainPinLat = evt.target.getLatLng().lng.toFixed(5);
   addressElement.value = `${mainPinLng}, ${mainPinLat}`;
 });
-
-// Я столкнулся с багом, кажется: https://github.com/Leaflet/Leaflet/issues/3922?imz_s=vcmg0kjkfnvdd0nsi1sc5tqo76
-// Попап открывался корректно только при первом открытии, при последующих он был пустым
-// Запихнул все содержимое карточки в div, вроде стало работать (generate-property-card)

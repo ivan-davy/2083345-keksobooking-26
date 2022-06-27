@@ -1,5 +1,3 @@
-import {generateProperty} from './generate-property.js';
-
 const PROPERTY_TYPE_VOCABULARY = {
   'palace': 'Дворец',
   'flat': 'Квартира',
@@ -8,11 +6,10 @@ const PROPERTY_TYPE_VOCABULARY = {
   'hotel': 'Отель'
 };
 
-const generatePropertyCard = (qty = 1) => {
-  const generatedProperties = generateProperty(qty);
-  const propertyFragments = [];
+const generatePropertyCards = (properties) => {
+  const propertyCards = [];
   const cardTemplate = document.querySelector('#card');
-  generatedProperties.forEach((property) => {
+  Array.from(properties).forEach((property) => {
     const propertyCard = document.createElement('div');
     propertyCard.appendChild(cardTemplate.content.cloneNode(true));
     propertyCard.querySelector('.popup__title').textContent = property.offer.title;
@@ -57,13 +54,10 @@ const generatePropertyCard = (qty = 1) => {
         }
       });
     }
-    propertyFragments.push(propertyCard);
+    propertyCards.push(propertyCard);
   });
-  return {
-    fragments: propertyFragments,
-    properties: generatedProperties,
-  };
+  return propertyCards;
 };
 
-export {generatePropertyCard};
+export {generatePropertyCards};
 
