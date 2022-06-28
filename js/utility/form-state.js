@@ -34,5 +34,24 @@ const filterFormToActiveState = () => {
   document.querySelector('.map__filters').classList.remove('map__filters--disabled');
 };
 
-export {adFormToInactiveState, adFormToActiveState, filterFormToInactiveState, filterFormToActiveState};
+const submitButton = document.querySelector('.ad-form__submit');
+
+const submitButtonToInactiveState = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = '...';
+};
+
+const submitButtonToActiveState = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
+
+export {
+  adFormToInactiveState,
+  adFormToActiveState,
+  filterFormToInactiveState,
+  filterFormToActiveState,
+  submitButtonToInactiveState,
+  submitButtonToActiveState
+};
 

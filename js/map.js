@@ -1,7 +1,7 @@
-import {generatePropertyCards} from './generate-property-cards.js';
+import {createPropertyCards} from './create-property-cards.js';
 import {adFormToActiveState, adFormToInactiveState, filterFormToActiveState, filterFormToInactiveState} from './utility/form-state.js';
 import {getPropertyData} from './api.js';
-import {customAlert} from './utility/custom-alert.js';
+import {customAlert} from './utility/info-popups.js';
 
 
 const MAP_DEFAULT_COORDS = {lat: 35.675, lng: 139.75};
@@ -11,6 +11,33 @@ const MAP_PROPERTIES_VISIBLE = 10;
 adFormToInactiveState();
 filterFormToInactiveState();
 const map = L.map('map-canvas');
+const markerGroup = L.layerGroup().addTo(map);
+const mainMarkerGroup = L.layerGroup().addTo(map);
+
+
+const renderMainPin = () => {
+  const addressElement = document.querySelector('#address');
+
+  const createMainPin = (location) => L.marker(
+    location,
+    {
+      draggable: true,
+      icon: L.icon({
+        iconUrl: '/img/main-pin.svg',
+        iconSize: [52, 52],
+        iconAnchor: [26, 52]
+      })
+    })
+    .addTo(mainMarkerGroup);
+
+  const mainPin = createMainPin(MAP_DEFAULT_COORDS);
+  mainPin.on('drag', (evt) => {
+    const mainPinLng = evt.target.getLatLng().lat.toFixed(5);
+    const mainPinLat = evt.target.getLatLng().lng.toFixed(5);
+    addressElement.value = `${mainPinLng}, ${mainPinLat}`;
+  });
+};
+
 
 const renderMap = (properties) => {
   const renderTile = () => {
@@ -24,8 +51,7 @@ const renderMap = (properties) => {
 
   const renderPins = () => {
     properties = properties.slice(0, MAP_PROPERTIES_VISIBLE);
-    const propertyCards = generatePropertyCards(properties);
-    const markerGroup = L.layerGroup().addTo(map);
+    const propertyCards = createPropertyCards(properties);
 
     const createPin = (location, popupCardFragment) => L.marker(
       location,
@@ -46,44 +72,24 @@ const renderMap = (properties) => {
     filterFormToActiveState();
   };
 
-  const renderMainPin = () => {
-    const addressElement = document.querySelector('#address');
-    const mainMarkerGroup = L.layerGroup().addTo(map);
-
-    const createMainPin = (location) => L.marker(
-      location,
-      {
-        draggable: true,
-        icon: L.icon({
-          iconUrl: '/img/main-pin.svg',
-          iconSize: [52, 52],
-          iconAnchor: [26, 52]
-        })
-      })
-      .addTo(mainMarkerGroup);
-
-    const mainPin = createMainPin(MAP_DEFAULT_COORDS);
-    mainPin.on('drag', (evt) => {
-      const mainPinLng = evt.target.getLatLng().lat.toFixed(5);
-      const mainPinLat = evt.target.getLatLng().lng.toFixed(5);
-      addressElement.value = `${mainPinLng}, ${mainPinLat}`;
-    });
-  };
-
-
   renderTile();
   renderMainPin();
   if (properties) {
     renderPins();
   }
-
 };
 
-map.on('load', () => {
+const resetMap = () => {
+  mainMarkerGroup.clearLayers();
+  renderMainPin();
+  map.setView({lat: MAP_DEFAULT_COORDS.lat, lng: MAP_DEFAULT_COORDS.lng}, MAP_DEFAULT_SCALE);
+};
+
+map.once('load', () => {
   adFormToActiveState();
   getPropertyData(renderMap, customAlert);
 });
 
 map.setView({lat: MAP_DEFAULT_COORDS.lat, lng: MAP_DEFAULT_COORDS.lng}, MAP_DEFAULT_SCALE);
 
-export {renderMap};
+export {renderMap, resetMap};

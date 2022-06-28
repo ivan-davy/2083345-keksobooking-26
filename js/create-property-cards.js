@@ -6,7 +6,7 @@ const PROPERTY_TYPE_VOCABULARY = {
   'hotel': 'Отель'
 };
 
-const generatePropertyCards = (properties) => {
+const createPropertyCards = (properties) => {
   const propertyCards = [];
   const cardTemplate = document.querySelector('#card');
   Array.from(properties).forEach((property) => {
@@ -59,5 +59,5 @@ const generatePropertyCards = (properties) => {
   return propertyCards;
 };
 
-export {generatePropertyCards};
+export {createPropertyCards};
 
