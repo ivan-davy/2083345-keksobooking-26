@@ -125,6 +125,7 @@ adForm.addEventListener('submit', (evt) => {
   if (isValid) {
     submitButtonToInactiveState();
     sendPropertyData(successFormPopup, errorFormPopup, new FormData(evt.target));
+    priceSlider.noUiSlider.set(0);
   }
 });
 
@@ -132,6 +133,7 @@ adForm.addEventListener('submit', (evt) => {
 
 adForm.querySelector('.ad-form__reset').addEventListener('click', () => {
   resetMap();
+  priceSlider.noUiSlider.set(0);
 });
 
 

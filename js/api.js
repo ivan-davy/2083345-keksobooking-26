@@ -1,5 +1,5 @@
 const getPropertyData = (onSuccessCb, onFailCb) => {
-  fetch('https://26.javascript.pages.academy/keksobooking/dat')
+  fetch('https://26.javascript.pages.academy/keksobooking/data')
     .then((response) => response.json())
     .then((properties) => onSuccessCb(properties))
     .then((properties) => properties)
