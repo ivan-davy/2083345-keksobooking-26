@@ -1,3 +1,8 @@
+import {submitButtonToInactiveState} from './utility/form-state.js';
+import {sendPropertyData} from './api.js';
+import {errorFormPopup, successFormPopup} from './utility/info-popups.js';
+import {resetMap} from './map.js';
+
 const adForm = document.querySelector('.ad-form');
 //const selectedPropertyType = adForm.querySelector('#type option:checked').value;
 
@@ -116,7 +121,19 @@ adForm.querySelector('#timeout').addEventListener('change', () => {
 
 adForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  pristine.validate();
+  const isValid = pristine.validate();
+  if (isValid) {
+    submitButtonToInactiveState();
+    sendPropertyData(successFormPopup, errorFormPopup, new FormData(evt.target));
+    priceSlider.noUiSlider.set(0);
+  }
+});
+
+// Сброс
+
+adForm.querySelector('.ad-form__reset').addEventListener('click', () => {
+  resetMap();
+  priceSlider.noUiSlider.set(0);
 });
 
 

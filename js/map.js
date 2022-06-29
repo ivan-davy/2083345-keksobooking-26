@@ -1,68 +1,95 @@
-import {formsToActiveState, formsToInactiveState} from './utility/utility-form-state.js';
-import {generatePropertyCard} from './generate-property-card.js';
+import {createPropertyCards} from './create-property-cards.js';
+import {adFormToActiveState, adFormToInactiveState, filterFormToActiveState, filterFormToInactiveState} from './utility/form-state.js';
+import {getPropertyData} from './api.js';
+import {customAlert} from './utility/info-popups.js';
 
 
-const GENERATED_OBJECTS_QTY = 10; // Число имуществ, которое нужно сгенерировать
-const DEFAULT_COORDINATES = {lat: 35.675, lng: 139.75};
-const DEFAULT_SCALE = 12;
-const addressElement = document.querySelector('#address');
-const data = generatePropertyCard(GENERATED_OBJECTS_QTY);
+const MAP_DEFAULT_COORDS = {lat: 35.675, lng: 139.75};
+const MAP_DEFAULT_SCALE = 12;
+const MAP_PROPERTIES_VISIBLE = 10;
 
-formsToInactiveState();
-const map = L.map('map-canvas')
-  .on('load', () => {formsToActiveState();})
-  .setView({lat: DEFAULT_COORDINATES.lat, lng: DEFAULT_COORDINATES.lng}, DEFAULT_SCALE);
-
-L.tileLayer(
-  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>',
-  },
-).addTo(map);
-
-const mainMarkerGroup = L.layerGroup().addTo(map);
+adFormToInactiveState();
+filterFormToInactiveState();
+const map = L.map('map-canvas');
 const markerGroup = L.layerGroup().addTo(map);
+const mainMarkerGroup = L.layerGroup().addTo(map);
 
-const createPin = (location, popupCardFragment) => {
-  const marker = L.marker(
+
+const renderMainPin = () => {
+  const addressElement = document.querySelector('#address');
+
+  const createMainPin = (location) => L.marker(
     location,
     {
+      draggable: true,
       icon: L.icon({
-        iconUrl: '/img/pin.svg',
-        iconSize: [40, 40],
-        iconAnchor: [20, 40]
+        iconUrl: '/img/main-pin.svg',
+        iconSize: [52, 52],
+        iconAnchor: [26, 52]
       })
-    });
-  marker.bindPopup(popupCardFragment).addTo(markerGroup);
-  return marker;
+    })
+    .addTo(mainMarkerGroup);
+
+  const mainPin = createMainPin(MAP_DEFAULT_COORDS);
+  mainPin.on('drag', (evt) => {
+    const mainPinLng = evt.target.getLatLng().lat.toFixed(5);
+    const mainPinLat = evt.target.getLatLng().lng.toFixed(5);
+    addressElement.value = `${mainPinLng}, ${mainPinLat}`;
+  });
 };
 
-const createMainPin = (location) => L.marker(
-  location,
-  {
-    draggable: true,
-    icon: L.icon({
-      iconUrl: '/img/main-pin.svg',
-      iconSize: [52, 52],
-      iconAnchor: [26, 52]
-    })
-  })
-  .addTo(mainMarkerGroup);
 
-const mainPin = createMainPin(DEFAULT_COORDINATES);
-const pins = [];
-data.properties.forEach((property, index) => {
-  const newPin = createPin(property.location, data.fragments[index]);
-  pins.push(newPin);
+const renderMap = (properties) => {
+  const renderTile = () => {
+    L.tileLayer(
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>',
+      },
+    ).addTo(map);
+  };
+
+  const renderPins = () => {
+    properties = properties.slice(0, MAP_PROPERTIES_VISIBLE);
+    const propertyCards = createPropertyCards(properties);
+
+    const createPin = (location, popupCardFragment) => L.marker(
+      location,
+      {
+        icon: L.icon({
+          iconUrl: '/img/pin.svg',
+          iconSize: [40, 40],
+          iconAnchor: [20, 40]
+        })
+      })
+      .bindPopup(popupCardFragment).addTo(markerGroup);
+
+    const pins = [];
+    properties.forEach((property, index) => {
+      const newPin = createPin(property.location, propertyCards[index]);
+      pins.push(newPin);
+    });
+    filterFormToActiveState();
+  };
+
+  renderTile();
+  renderMainPin();
+  if (properties) {
+    renderPins();
+  }
+};
+
+const resetMap = () => {
+  mainMarkerGroup.clearLayers();
+  renderMainPin();
+  map.setView({lat: MAP_DEFAULT_COORDS.lat, lng: MAP_DEFAULT_COORDS.lng}, MAP_DEFAULT_SCALE);
+};
+
+map.once('load', () => {
+  adFormToActiveState();
+  getPropertyData(renderMap, customAlert);
 });
 
+map.setView({lat: MAP_DEFAULT_COORDS.lat, lng: MAP_DEFAULT_COORDS.lng}, MAP_DEFAULT_SCALE);
 
-mainPin.on('drag', (evt) => {
-  const mainPinLng = evt.target.getLatLng().lat.toFixed(5);
-  const mainPinLat = evt.target.getLatLng().lng.toFixed(5);
-  addressElement.value = `${mainPinLng}, ${mainPinLat}`;
-});
-
-// Я столкнулся с багом, кажется: https://github.com/Leaflet/Leaflet/issues/3922?imz_s=vcmg0kjkfnvdd0nsi1sc5tqo76
-// Попап открывался корректно только при первом открытии, при последующих он был пустым
-// Запихнул все содержимое карточки в div, вроде стало работать (generate-property-card)
+export {renderMap, resetMap};
