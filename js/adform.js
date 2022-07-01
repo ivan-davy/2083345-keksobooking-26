@@ -1,10 +1,10 @@
 import {submitButtonToInactiveState} from './utility/form-state.js';
 import {sendPropertyData} from './api.js';
 import {errorFormPopup, successFormPopup} from './utility/info-popups.js';
-import {resetMap} from './map.js';
+import  {resetMap} from './map-and-filters.js';
+
 
 const adForm = document.querySelector('.ad-form');
-//const selectedPropertyType = adForm.querySelector('#type option:checked').value;
 
 const TYPE_PRICE_MIN_RESTRICTIONS = {
   'palace': 10000,
@@ -43,7 +43,6 @@ const pristine = new Pristine(adForm, {
 });
 
 // Название
-
 const validateTitle = (value) => value.length >= 30 && value.length <= 100;
 const getTitleErrorMessage = () => 'Не короче 30 и не длиннее 100 символов';
 pristine.addValidator(
@@ -85,7 +84,6 @@ adForm.querySelector('#type').addEventListener('change', () => {
 });
 
 // Число комнат и гостей
-
 const validateCapacity = (value) => {
   const rooms = adForm.querySelector('#room_number option:checked').value;
   return ROOM_CAPACITY_RESTRICTIONS[rooms].includes(value);
@@ -101,7 +99,6 @@ adForm.querySelector('#room_number').addEventListener('change', () => {
 });
 
 // Чек-ин и чек-аут
-
 adForm.querySelector('#timein').addEventListener('change', () => {
   const newTime = adForm.querySelector('#timein option:checked').value;
   adForm.querySelectorAll('#timeout option').forEach((opt) => {
@@ -118,7 +115,6 @@ adForm.querySelector('#timeout').addEventListener('change', () => {
 });
 
 // Валидация при отправке
-
 adForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
@@ -130,7 +126,6 @@ adForm.addEventListener('submit', (evt) => {
 });
 
 // Сброс
-
 adForm.querySelector('.ad-form__reset').addEventListener('click', () => {
   resetMap();
   priceSlider.noUiSlider.set(0);
