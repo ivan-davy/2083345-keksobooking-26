@@ -1,17 +1,21 @@
+const GET_DATA_URL = 'https://26.javascript.pages.academy/keksobooking/data';
+const SEND_DATA_URL = 'https://26.javascript.pages.academy/keksobooking';
+
+
 const getPropertyData = (onSuccessCb, onFailCb) => {
-  fetch('https://26.javascript.pages.academy/keksobooking/data')
+  fetch(GET_DATA_URL)
     .then((response) => response.json())
     .then((properties) => onSuccessCb(properties))
-    .then((properties) => properties)
     .catch(() => {
       onFailCb('Не удалось загрузить данные :(');
       onSuccessCb(null);
     });
 };
 
+
 const sendPropertyData = (onSuccessCb, onFailCb, body) => {
   fetch(
-    'https://26.javascript.pages.academy/keksobooking',
+    SEND_DATA_URL,
     {
       method: 'POST',
       type: 'multipart/form-data',

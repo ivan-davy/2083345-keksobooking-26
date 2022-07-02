@@ -1,3 +1,4 @@
+// Перевод форм в неактивные состояния и обратно
 const adFormToInactiveState = () => {
   document.querySelector('.ad-form').classList.add('ad-form--disabled');
   document.querySelector('.ad-form')
