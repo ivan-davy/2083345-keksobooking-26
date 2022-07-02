@@ -127,6 +127,8 @@ const renderMap = (properties) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(renderPins, RENDER_DEBOUNCE_DELAY);
   });
+  const filterForm = document.querySelector('.map__filters');
+  filterForm.addEventListener('reset', renderPins);
 };
 
 
@@ -134,6 +136,8 @@ const renderMap = (properties) => {
 const resetMap = () => {
   mainMarkerGroup.clearLayers();
   renderMainPin();
+  document.querySelector('.map__filters').reset();
+  document.querySelector('.map__filters').reset();
   map.setView({lat: MAP_DEFAULT_COORDS.lat, lng: MAP_DEFAULT_COORDS.lng}, MAP_DEFAULT_SCALE);
 };
 
