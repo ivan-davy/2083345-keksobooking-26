@@ -14,6 +14,7 @@ import {
   roomsFilterLogic,
   typeFilterLogic
 } from './utility/filter-logic.js';
+import {debounce} from './utility/debounce.js';
 
 
 const MAP_DEFAULT_COORDS = {lat: 35.675, lng: 139.75};
@@ -100,35 +101,33 @@ const renderMap = (properties) => {
     renderPins();
   }
 
-  let timeoutId;
+
+  const debouncedRenderPins = debounce(renderPins, RENDER_DEBOUNCE_DELAY);
   // Слушатели для фильтров с устранителями дребезга отрисовщиков
   const typeFilter = document.querySelector('#housing-type');
   typeFilter.addEventListener('change', () => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(renderPins, RENDER_DEBOUNCE_DELAY);
+    debouncedRenderPins();
   });
   const priceFilter = document.querySelector('#housing-price');
   priceFilter.addEventListener('change', () => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(renderPins, RENDER_DEBOUNCE_DELAY);
+    debouncedRenderPins();
   });
   const roomsFilter = document.querySelector('#housing-rooms');
   roomsFilter.addEventListener('change', () => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(renderPins, RENDER_DEBOUNCE_DELAY);
+    debouncedRenderPins();
   });
   const guestsFilter = document.querySelector('#housing-guests');
   guestsFilter.addEventListener('change', () => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(renderPins, RENDER_DEBOUNCE_DELAY);
+    debouncedRenderPins();
   });
   const featuresFilter = document.querySelector('#housing-features');
   featuresFilter.addEventListener('change', () => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(renderPins, RENDER_DEBOUNCE_DELAY);
+    debouncedRenderPins();
   });
   const filterForm = document.querySelector('.map__filters');
-  filterForm.addEventListener('reset', renderPins);
+  filterForm.addEventListener('reset', () => {
+    debouncedRenderPins();
+  });
 };
 
 
@@ -143,8 +142,8 @@ const resetMap = () => {
 
 // Инициализация карты и загрузка данных о недвижимостях (здесь начинается код)
 map.once('load', () => {
-  adFormToActiveState();
   getPropertyData(renderMap, customAlert);
+  adFormToActiveState();
 });
 
 map.setView({lat: MAP_DEFAULT_COORDS.lat, lng: MAP_DEFAULT_COORDS.lng}, MAP_DEFAULT_SCALE);
