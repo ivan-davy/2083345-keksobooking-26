@@ -1,7 +1,7 @@
 import {submitButtonToInactiveState} from './utility/form-state.js';
 import {sendPropertyData} from './api.js';
 import {errorFormPopup, successFormPopup} from './utility/info-popups.js';
-import  {resetMap} from './map-and-filters.js';
+import  {resetMap} from './map-filters.js';
 
 
 const adForm = document.querySelector('.ad-form');

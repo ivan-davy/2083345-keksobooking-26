@@ -1,5 +1,5 @@
 import {submitButtonToActiveState} from './form-state.js';
-import {resetMap} from '../map-and-filters.js';
+import {resetMap} from '../map-filters.js';
 
 const customAlert = (message) => {
   const alertContainer = document.createElement('div');
