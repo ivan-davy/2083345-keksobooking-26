@@ -10,7 +10,7 @@ const priceFilterLogic = (property) => {
   const desiredPrice = document.querySelector('#housing-price').value;
   if (desiredPrice === 'low' && (propertyPrice < 10000)) {
     return true;
-  } else if (desiredPrice === 'middle' && 10000 < propertyPrice < 50000) {
+  } else if (desiredPrice === 'middle' && (10000 < propertyPrice && propertyPrice < 50000)) {
     return true;
   } else if (desiredPrice === 'high' && propertyPrice > 50000) {
     return true;
