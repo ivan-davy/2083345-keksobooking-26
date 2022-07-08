@@ -127,8 +127,8 @@ adForm.addEventListener('submit', (evt) => {
 
 // Сброс
 adForm.querySelector('.ad-form__reset').addEventListener('click', () => {
-  resetMap();
   priceSlider.noUiSlider.set(0);
+  resetMap();
 });
 
 
