@@ -1,5 +1,6 @@
-const GET_DATA_URL = 'https://26.javascript.pages.academy/keksobooking/data';
-const SEND_DATA_URL = 'https://26.javascript.pages.academy/keksobooking';
+const URL = 'https://26.javascript.pages.academy/keksobooking';
+const GET_DATA_URL = `${URL}/data`;
+const SEND_DATA_URL = `${URL}`;
 
 
 const getPropertyData = (onSuccessCb, onFailCb) => {

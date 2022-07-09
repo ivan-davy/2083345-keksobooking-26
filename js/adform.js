@@ -2,6 +2,7 @@ import {submitButtonToInactiveState} from './utility/form-state.js';
 import {sendPropertyData} from './api.js';
 import {errorFormPopup, successFormPopup} from './utility/info-popups.js';
 import  {resetMap} from './map-filters.js';
+import {resetImages} from './images.js';
 
 
 const adForm = document.querySelector('.ad-form');
@@ -129,6 +130,7 @@ adForm.addEventListener('submit', (evt) => {
 adForm.querySelector('.ad-form__reset').addEventListener('click', () => {
   priceSlider.noUiSlider.set(0);
   resetMap();
+  resetImages();
 });
 
 
