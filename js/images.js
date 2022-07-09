@@ -1,9 +1,11 @@
 const ALLOWED_FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
-const avatarChooser = document.querySelector('.ad-form__field').querySelector('input');
+const avatarChooser = document.querySelector('.ad-form__field input');
 const avatarPreview = document.querySelector('.ad-form-header__preview img');
 const propertyPictureChooser = document.querySelector('.ad-form__upload input');
 const propertyPicturePreview = document.querySelector('.ad-form__photo');
+
+const defaultAvatar = 'img/avatars/default.png';
 
 avatarChooser.addEventListener('change', () => {
   const file = avatarChooser.files[0];
@@ -28,3 +30,12 @@ propertyPictureChooser.addEventListener('change', () => {
     propertyPicturePreview.appendChild(imageElement);
   }
 });
+
+const resetImages = () => {
+  avatarChooser.files = null;
+  propertyPictureChooser.files = null;
+  avatarPreview.src = defaultAvatar;
+  propertyPicturePreview.innerHTML = '';
+};
+
+export {resetImages};
